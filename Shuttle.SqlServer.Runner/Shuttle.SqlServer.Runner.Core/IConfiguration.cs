@@ -6,6 +6,6 @@
         string ScriptFolder { get; }
         bool Recursive { get; }
         string SqlCmdArguments { get; }
-        string ConnectionString { get; }
+        string RegistryConnectionString { get; }
     }
 }

@@ -1,0 +1,7 @@
+﻿<configuration
+  environment="development"
+  registryConnectionString="registry-connection-string"
+  scriptFolder="c:\script-folder"
+  recursive="true"
+  sqlCmdArguments="sqlcmd-arguments"
+/>
