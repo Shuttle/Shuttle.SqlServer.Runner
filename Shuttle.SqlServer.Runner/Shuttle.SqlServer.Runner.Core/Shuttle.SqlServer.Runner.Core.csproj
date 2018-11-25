@@ -98,6 +98,7 @@
     <Compile Include="IHashingService.cs" />
     <Compile Include="IScriptQueryFactory.cs" />
     <Compile Include="IScriptRepository.cs" />
+    <Compile Include="IScriptService.cs" />
     <Compile Include="Script.cs" />
     <Compile Include="ScriptColumns.cs" />
     <Compile Include="ScriptQueryFactory.cs" />

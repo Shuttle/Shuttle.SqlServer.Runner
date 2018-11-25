@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using Shuttle.Core.Container;
+using NUnit.Framework;
+using Shuttle.SqlServer.Runner.Core;
 
 namespace Shuttle.SqlServer.Runner.Tests.Integration
 {
@@ -7,7 +9,7 @@ namespace Shuttle.SqlServer.Runner.Tests.Integration
         [Test]
         public void Should_be_able_to_persist_script()
         {
-
+            var service = IntegrationFixture.Resolver.Resolve<IScriptService>();
         }
     }
 }
