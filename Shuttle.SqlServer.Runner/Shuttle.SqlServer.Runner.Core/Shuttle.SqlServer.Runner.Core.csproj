@@ -111,7 +111,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include=".script\ScriptRegistry.sql" />
+    <EmbeddedResource Include=".scripts\ScriptRegistry.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

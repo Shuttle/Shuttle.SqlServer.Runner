@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Shuttle.Core.Contract;
+using Shuttle.Core.Data;
 using Shuttle.Core.Logging;
 
 namespace Shuttle.SqlServer.Runner.Core
@@ -11,15 +12,19 @@ namespace Shuttle.SqlServer.Runner.Core
 
     public class ScriptService : IScriptService
     {
+        private readonly IDatabaseContextFactory _databaseContextFactory;
         private readonly IHashingService _hashingService;
         private readonly IScriptRepository _repository;
         private readonly ILog _log;
 
-        public ScriptService(IScriptRepository repository, IHashingService hashingService)
+        public ScriptService(IDatabaseContextFactory databaseContextFactory, IScriptRepository repository,
+            IHashingService hashingService)
         {
-            Guard.AgainstNull(hashingService, nameof(hashingService));
+            Guard.AgainstNull(databaseContextFactory, nameof(databaseContextFactory));
             Guard.AgainstNull(repository, nameof(repository));
+            Guard.AgainstNull(hashingService, nameof(hashingService));
 
+            _databaseContextFactory = databaseContextFactory;
             _hashingService = hashingService;
             _repository = repository;
 
@@ -36,9 +41,14 @@ namespace Shuttle.SqlServer.Runner.Core
             {
                 var hash = _hashingService.GetHash(File.ReadAllText(file));
 
-                var script = _repository.Find(configuration.Environment, configuration.ScriptFolder, file) 
-                             ?? 
+                Script script;
+
+                using (_databaseContextFactory.Create("System.Data.SqlClient", configuration.RegistryConnectionString))
+                {
+                    script = _repository.Find(configuration.Environment, configuration.ScriptFolder, file)
+                             ??
                              Script.Create(configuration.Environment, configuration.ScriptFolder, file);
+                }
 
                 if (script.HasHash(hash))
                 {
@@ -47,7 +57,10 @@ namespace Shuttle.SqlServer.Runner.Core
 
                 Execute(configuration, script);
 
-                _repository.Register(script.Executed(hash));
+                using (_databaseContextFactory.Create("System.Data.SqlClient", configuration.RegistryConnectionString))
+                {
+                    _repository.Register(script.Executed(hash));
+                }
 
                 result.Add(script);
             }

@@ -121,11 +121,14 @@
     <Compile Include="Global.cs" />
     <Compile Include="IntegrationFixture.cs" />
     <Compile Include="Integration\DefaultConfigurationFixture.cs" />
-    <Compile Include="Integration\ScriptRepositoryFixture.cs" />
+    <Compile Include="Integration\ScriptServiceFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Integration\.files\configuration.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Integration\.scripts\create-table.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -138,6 +141,7 @@
       <Name>Shuttle.SqlServer.Runner.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

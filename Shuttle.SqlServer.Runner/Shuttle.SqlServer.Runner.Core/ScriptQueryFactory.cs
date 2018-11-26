@@ -11,8 +11,8 @@ select
     Hash,
     Status,
     Message,
-    DateRegistered,
-    DateModified
+    DateStarted,
+    DateCompleted
 from
     Script
 where
