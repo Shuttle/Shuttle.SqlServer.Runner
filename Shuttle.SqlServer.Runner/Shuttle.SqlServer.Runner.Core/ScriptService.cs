@@ -9,7 +9,6 @@ using Shuttle.Core.Logging;
 
 namespace Shuttle.SqlServer.Runner.Core
 {
-
     public class ScriptService : IScriptService
     {
         private readonly IDatabaseContextFactory _databaseContextFactory;
@@ -73,8 +72,6 @@ namespace Shuttle.SqlServer.Runner.Core
             var outputData = new StringBuilder();
 
             script.Start();
-
-            outputData.AppendLine($"[start time]: {DateTime.Now:HH:mm:ss.ttt}");
 
             var process = new Process
             {

@@ -9,7 +9,7 @@ namespace Shuttle.SqlServer.Runner.Core
     public class Script
     {
         private static readonly Regex ErrorExpression = new Regex(@"Msg\s*\d*,\s*Level\s*\d*,\s*State\s*\d*");
-        private static readonly byte[] _errorHash = new byte[16];
+        private static readonly byte[] ErrorHash = new byte[16];
 
         public Script(string environment, string scriptFolder, string relativePath)
         {
@@ -55,6 +55,11 @@ namespace Shuttle.SqlServer.Runner.Core
                 relativePath = path.Substring(scriptFolder.Length);
             }
 
+            if (relativePath.StartsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                relativePath = relativePath.Substring(1);
+            }
+
             return new Script(environment, scriptFolder, relativePath);
         }
 
@@ -84,7 +89,7 @@ namespace Shuttle.SqlServer.Runner.Core
 
             if (HasError)
             {
-                Hash = _errorHash;
+                Hash = ErrorHash;
             }
 
             return this;
@@ -94,13 +99,23 @@ namespace Shuttle.SqlServer.Runner.Core
             ? "Failed"
             : "Success";
 
-        public bool HasError => ErrorExpression.Match(Message ?? string.Empty).Success
-                                ||
-                                (Message ?? string.Empty).ToLower().Contains("timed out")
-                                ||
-                                (Message ?? string.Empty).ToLower().Contains("login failed")
-                                ||
-                                (Message ?? string.Empty).ToLower().Contains("Cannot open database");
+        public bool HasError
+        {
+            get
+            {
+                var message = (Message ?? string.Empty).ToLower();
+
+                return ErrorExpression.Match(Message ?? string.Empty).Success
+                       ||
+                       message.Contains("invalid filename")
+                       ||
+                       message.Contains("timed out")
+                       ||
+                       message.Contains("login failed")
+                       ||
+                       message.Contains("Cannot open database");
+            }
+        }
 
         public string Message { get; private set; }
 
@@ -115,7 +130,7 @@ namespace Shuttle.SqlServer.Runner.Core
         {
             Guard.AgainstNull(hash, nameof(hash));
 
-            Hash = HasError ? _errorHash : hash;
+            Hash = HasError ? ErrorHash : hash;
 
             return this;
         }
